@@ -54,4 +54,87 @@
         </div>
     </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('.auth-form');
+    if (!form) return;
+
+    function setErrorMessage(input, message) {
+        input.setCustomValidity(message);
+        input.reportValidity();
+    }
+
+    function clearErrorMessage(input) {
+        input.setCustomValidity('');
+    }
+
+    const nameInput = form.querySelector('#name');
+    const emailInput = form.querySelector('#email');
+    const passwordInput = form.querySelector('#password');
+    const confirmInput = form.querySelector('#password_confirmation');
+
+    if (nameInput) {
+        nameInput.addEventListener('input', function () {
+            clearErrorMessage(this);
+        });
+        nameInput.addEventListener('invalid', function (e) {
+            e.preventDefault();
+            if (!this.value.trim()) {
+                setErrorMessage(this, 'Пожалуйста, введите ваше имя.');
+            } else if (/[0-9]/.test(this.value)) {
+                setErrorMessage(this, 'Имя не должно содержать цифры.');
+            }
+        });
+    }
+
+    if (emailInput) {
+        emailInput.addEventListener('input', function () {
+            clearErrorMessage(this);
+        });
+        emailInput.addEventListener('invalid', function (e) {
+            e.preventDefault();
+            if (!this.value.trim()) {
+                setErrorMessage(this, 'Пожалуйста, введите ваш email.');
+            } else {
+                setErrorMessage(this, 'Пожалуйста, введите корректный email.');
+            }
+        });
+    }
+
+    if (passwordInput) {
+        passwordInput.addEventListener('input', function () {
+            clearErrorMessage(this);
+        });
+        passwordInput.addEventListener('invalid', function (e) {
+            e.preventDefault();
+            if (!this.value.trim()) {
+                setErrorMessage(this, 'Пожалуйста, введите пароль.');
+            }
+        });
+    }
+
+    if (confirmInput) {
+        confirmInput.addEventListener('input', function () {
+            clearErrorMessage(this);
+            if (passwordInput && this.value !== passwordInput.value) {
+                setErrorMessage(this, 'Пароли не совпадают.');
+            }
+        });
+        confirmInput.addEventListener('invalid', function (e) {
+            e.preventDefault();
+            if (!this.value.trim()) {
+                setErrorMessage(this, 'Пожалуйста, подтвердите пароль.');
+            }
+        });
+    }
+
+    form.addEventListener('submit', function (e) {
+        if (passwordInput && confirmInput && passwordInput.value !== confirmInput.value) {
+            e.preventDefault();
+            setErrorMessage(confirmInput, 'Пароли не совпадают.');
+            return;
+        }
+    });
+});
+</script>
 @endsection

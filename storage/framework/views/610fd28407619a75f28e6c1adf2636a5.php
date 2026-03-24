@@ -1,15 +1,15 @@
-@extends('layouts.app')
 
-@section('title', ($post->name ?: 'Объявление') . ' — PetSearch')
 
-@section('content')
+<?php $__env->startSection('title', ($post->name ?: 'Объявление') . ' — PetSearch'); ?>
+
+<?php $__env->startSection('content'); ?>
 <div class="container">
     <div class="post-detail">
         <!-- Хлебные крошки -->
         <div class="breadcrumb">
-            <a href="{{ route('posts.index') }}">Все объявления</a>
+            <a href="<?php echo e(route('posts.index')); ?>">Все объявления</a>
             <span class="breadcrumb__separator">/</span>
-            <span>{{ $post->name ?: 'Объявление' }}</span>
+            <span><?php echo e($post->name ?: 'Объявление'); ?></span>
         </div>
 
         <div class="post-grid">
@@ -23,89 +23,90 @@
                 <div class="post-info">
                     <div class="post-header">
                         <div>
-                            <span class="post-status {{ $post->status == 'lost' ? 'status-lost' : 'status-found' }}">
-                                {{ $post->status == 'lost' ? 'Пропал' : 'Найден' }}
+                            <span class="post-status <?php echo e($post->status == 'lost' ? 'status-lost' : 'status-found'); ?>">
+                                <?php echo e($post->status == 'lost' ? 'Пропал' : 'Найден'); ?>
+
                             </span>
-                            <h1 class="post-title">{{ $post->name ?: 'Без имени' }}</h1>
+                            <h1 class="post-title"><?php echo e($post->name ?: 'Без имени'); ?></h1>
                         </div>
-                        @auth
-                            @if(Auth::user()->id !== $post->user_id)
-                                <button class="btn btn--favorite {{ $post->favoritedBy->contains(auth()->id()) ? 'active' : '' }}" onclick="toggleFavorite({{ $post->id }})">
-                                    <i class="fa{{ $post->favoritedBy->contains(auth()->id()) ? 's' : 'r' }} fa-heart"></i>
+                        <?php if(auth()->guard()->check()): ?>
+                            <?php if(Auth::user()->id !== $post->user_id): ?>
+                                <button class="btn btn--favorite <?php echo e($post->favoritedBy->contains(auth()->id()) ? 'active' : ''); ?>" onclick="toggleFavorite(<?php echo e($post->id); ?>)">
+                                    <i class="fa<?php echo e($post->favoritedBy->contains(auth()->id()) ? 's' : 'r'); ?> fa-heart"></i>
                                 </button>
-                            @endif
-                        @endauth
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </div>
 
                     <div class="post-meta-row">
                         <div class="post-meta-item">
                             <strong>Вид животного:</strong>
-                            <span>{{ $post->category->name }}</span>
+                            <span><?php echo e($post->category->name); ?></span>
                         </div>
-                        @if($post->breed)
+                        <?php if($post->breed): ?>
                             <div class="post-meta-item">
                                 <strong>Порода:</strong>
-                                <span>{{ $post->breed->name }}</span>
+                                <span><?php echo e($post->breed->name); ?></span>
                             </div>
-                        @endif
+                        <?php endif; ?>
                     </div>
 
                     <div class="post-meta-row">
                         <div class="post-meta-item">
                             <strong>Дата события:</strong>
-                            <span>{{ $post->lost_date->format('d.m.Y') }}</span>
+                            <span><?php echo e($post->lost_date->format('d.m.Y')); ?></span>
                         </div>
                         <div class="post-meta-item">
                             <strong>Опубликовано:</strong>
-                            <span>{{ $post->created_at->format('d.m.Y H:i') }}</span>
+                            <span><?php echo e($post->created_at->format('d.m.Y H:i')); ?></span>
                         </div>
                     </div>
 
-                    @if($post->gender || $post->age)
+                    <?php if($post->gender || $post->age): ?>
                         <div class="post-meta-row">
-                            @if($post->gender)
+                            <?php if($post->gender): ?>
                                 <div class="post-meta-item">
                                     <strong>Пол:</strong>
                                     <span>
-                                        @if($post->gender == 'male') Самец
-                                        @elseif($post->gender == 'female') Самка
-                                        @else Неизвестно @endif
+                                        <?php if($post->gender == 'male'): ?> Самец
+                                        <?php elseif($post->gender == 'female'): ?> Самка
+                                        <?php else: ?> Неизвестно <?php endif; ?>
                                     </span>
                                 </div>
-                            @endif
-                            @if($post->age)
+                            <?php endif; ?>
+                            <?php if($post->age): ?>
                                 <div class="post-meta-item">
                                     <strong>Возраст:</strong>
-                                    <span>{{ $post->age }}</span>
+                                    <span><?php echo e($post->age); ?></span>
                                 </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
-                    @endif
+                    <?php endif; ?>
 
-                    @if($post->colors->count())
+                    <?php if($post->colors->count()): ?>
                         <div class="post-colors">
                             <strong>Окрас:</strong>
                             <div class="colors-tags">
-                                @foreach($post->colors as $color)
-                                    <span class="color-tag">{{ $color->name }}</span>
-                                @endforeach
+                                <?php $__currentLoopData = $post->colors; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $color): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <span class="color-tag"><?php echo e($color->name); ?></span>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
                         </div>
-                    @endif
+                    <?php endif; ?>
 
-                    @if($post->district)
+                    <?php if($post->district): ?>
                         <div class="post-location">
                             <strong><i class="fas fa-map-marker-alt"></i> Местоположение:</strong>
-                            <span>{{ $post->district->name }}</span>
+                            <span><?php echo e($post->district->name); ?></span>
                         </div>
-                    @endif
+                    <?php endif; ?>
 
-                    @if($post->description)
+                    <?php if($post->description): ?>
                         <div class="post-description">
                             <h2>Описание</h2>
-                            <p>{{ nl2br($post->description) }}</p>
+                            <p><?php echo e(nl2br($post->description)); ?></p>
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -119,77 +120,78 @@
                             <i class="fas fa-user-circle"></i>
                         </div>
                         <div class="author-info">
-                            <p class="author-name">{{ $post->user->name }}</p>
+                            <p class="author-name"><?php echo e($post->user->name); ?></p>
                             <p class="author-role">Опубликовано объявление</p>
                         </div>
                     </div>
 
-                    @if($post->contact_phone)
+                    <?php if($post->contact_phone): ?>
                         <div class="contact-phone">
                             <i class="fas fa-phone"></i>
-                            <a href="tel:{{ $post->contact_phone }}">{{ $post->contact_phone }}</a>
+                            <a href="tel:<?php echo e($post->contact_phone); ?>"><?php echo e($post->contact_phone); ?></a>
                         </div>
-                    @endif
+                    <?php endif; ?>
 
-                    @if($post->user->email)
+                    <?php if($post->user->email): ?>
                         <div class="contact-email">
                             <i class="fas fa-envelope"></i>
-                            <a href="mailto:{{ $post->user->email }}">{{ $post->user->email }}</a>
+                            <a href="mailto:<?php echo e($post->user->email); ?>"><?php echo e($post->user->email); ?></a>
                         </div>
-                    @endif
+                    <?php endif; ?>
 
-                    @auth
-                        @if(Auth::user()->id === $post->user_id)
+                    <?php if(auth()->guard()->check()): ?>
+                        <?php if(Auth::user()->id === $post->user_id): ?>
                             <div class="post-actions">
-                                <a href="{{ route('posts.edit', $post) }}" class="btn btn--secondary btn--block">
+                                <a href="<?php echo e(route('posts.edit', $post)); ?>" class="btn btn--secondary btn--block">
                                     Редактировать
                                 </a>
-                                <form action="{{ route('posts.destroy', $post) }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    @method('DELETE')
+                                <form action="<?php echo e(route('posts.destroy', $post)); ?>" method="POST" style="display: inline;">
+                                    <?php echo csrf_field(); ?>
+                                    <?php echo method_field('DELETE'); ?>
                                     <button type="submit" class="btn btn--danger btn--block"
                                             onclick="return confirm('Вы уверены?')">
                                         Удалить объявление
                                     </button>
                                 </form>
                             </div>
-                        @endif
+                        <?php endif; ?>
                 </div>
 
-                @endauth
+                <?php endif; ?>
 
                 <!-- Кнопка для открытия формы ответа -->
                 <button id="show-response-form" class="btn btn--primary btn--block" type="button">
                     Откликнуться на объявление
                 </button>
 
-                @if($post->responses->count() > 0)
+                <?php if($post->responses->count() > 0): ?>
                     <div class="post-responses">
-                        <h3>Ответы ({{ $post->responses->count() }})</h3>
+                        <h3>Ответы (<?php echo e($post->responses->count()); ?>)</h3>
                         <div class="responses-list">
-                            @foreach($post->responses as $response)
+                            <?php $__currentLoopData = $post->responses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $response): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <div class="response-item">
                                     <p class="response-author">
-                                        {{ $response->responder_name }}
-                                        @if($response->isFromRegisteredUser() && $response->user->phone)
-                                            <small>({{ $response->user->phone }})</small>
-                                        @elseif($response->guest_phone)
-                                            <small>({{ $response->guest_phone }})</small>
-                                        @endif
+                                        <?php echo e($response->responder_name); ?>
+
+                                        <?php if($response->isFromRegisteredUser() && $response->user->phone): ?>
+                                            <small>(<?php echo e($response->user->phone); ?>)</small>
+                                        <?php elseif($response->guest_phone): ?>
+                                            <small>(<?php echo e($response->guest_phone); ?>)</small>
+                                        <?php endif; ?>
                                     </p>
-                                    <p class="response-message">{{ $response->message }}</p>
-                                    @if($response->preferred_time)
-                                        <p class="response-time">Предпочтительное время связи: {{ $response->preferred_time }}</p>
-                                    @endif
-                                    @if($response->guest_social && !$response->isFromRegisteredUser())
-                                        <p class="response-social">Соцсети: {{ $response->guest_social }}</p>
-                                    @endif
-                                    <p class="response-date">{{ $response->created_at->format('d.m.Y H:i') }}</p>
+                                    <p class="response-message"><?php echo e($response->message); ?></p>
+                                    <?php if($response->preferred_time): ?>
+                                        <p class="response-time">Предпочтительное время связи: <?php echo e($response->preferred_time); ?></p>
+                                    <?php endif; ?>
+                                    <?php if($response->guest_social && !$response->isFromRegisteredUser()): ?>
+                                        <p class="response-social">Соцсети: <?php echo e($response->guest_social); ?></p>
+                                    <?php endif; ?>
+                                    <p class="response-date"><?php echo e($response->created_at->format('d.m.Y H:i')); ?></p>
                                 </div>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
             </aside>
         </div>
 
@@ -197,26 +199,27 @@
         <div class="similar-posts">
             <h2>Похожие объявления</h2>
             <div class="posts-grid">
-                @forelse($post->category->posts()->where('id', '!=', $post->id)->limit(4)->get() as $similar)
+                <?php $__empty_1 = true; $__currentLoopData = $post->category->posts()->where('id', '!=', $post->id)->limit(4)->get(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $similar): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <div class="post-card">
                         <div class="post-card__image">
                             <i class="fas fa-camera"></i>
                         </div>
                         <div class="post-card__content">
-                            <span class="post-card__status {{ $similar->status == 'lost' ? 'status-lost' : 'status-found' }}">
-                                {{ $similar->status == 'lost' ? 'Пропал' : 'Найден' }}
+                            <span class="post-card__status <?php echo e($similar->status == 'lost' ? 'status-lost' : 'status-found'); ?>">
+                                <?php echo e($similar->status == 'lost' ? 'Пропал' : 'Найден'); ?>
+
                             </span>
-                            <h3 class="post-card__title">{{ $similar->name ?: 'Без имени' }}</h3>
+                            <h3 class="post-card__title"><?php echo e($similar->name ?: 'Без имени'); ?></h3>
                             <div class="post-card__meta">
-                                <div><i class="fas fa-paw"></i> {{ $similar->category->name }}</div>
-                                <div><i class="far fa-calendar"></i> {{ $similar->lost_date->format('d.m.Y') }}</div>
+                                <div><i class="fas fa-paw"></i> <?php echo e($similar->category->name); ?></div>
+                                <div><i class="far fa-calendar"></i> <?php echo e($similar->lost_date->format('d.m.Y')); ?></div>
                             </div>
-                            <a href="{{ route('posts.show', $similar) }}" class="post-card__btn">Подробнее</a>
+                            <a href="<?php echo e(route('posts.show', $similar)); ?>" class="post-card__btn">Подробнее</a>
                         </div>
                     </div>
-                @empty
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <p class="empty-message">Похожих объявлений не найдено</p>
-                @endforelse
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -228,16 +231,16 @@
         <button type="button" class="response-modal-close" id="response-modal-close">&times;</button>
         <h3>Откликнуться на объявление</h3>
     <form id="response-form" action="#" method="POST">
-        @csrf
-        <input type="hidden" name="post_id" value="{{ $post->id }}">
+        <?php echo csrf_field(); ?>
+        <input type="hidden" name="post_id" value="<?php echo e($post->id); ?>">
         
-        @auth
+        <?php if(auth()->guard()->check()): ?>
             <!-- Для авторизованных пользователей -->
             <div class="form-group">
                 <label for="message">Ваше сообщение:</label>
                 <textarea name="message" id="message" required rows="4" placeholder="Опишите, что вы знаете об этом питомце..."></textarea>
             </div>
-        @else
+        <?php else: ?>
             <!-- Для гостей -->
             <div class="form-row">
                 <div class="form-group">
@@ -261,7 +264,7 @@
                 <label for="preferred_time">Предпочтительное время связи:</label>
                 <input type="text" name="preferred_time" id="preferred_time" placeholder="Например: вечера по будням">
             </div>
-        @endauth
+        <?php endif; ?>
         
         <button type="submit" class="btn btn--primary">Отправить отклик</button>
     </form>
@@ -500,4 +503,6 @@ function toggleFavorite(postId) {
     });
 }
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\OSPanel\home\petsearch_new\resources\views/posts/show.blade.php ENDPATH**/ ?>

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 
-// Авторизация
+// Авториз
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
@@ -33,7 +33,7 @@ Route::prefix('posts')->name('posts.')->group(function () {
     });
 });
 
-// Ответы на объявления
+// Отв на обявы
 Route::post('/responses', [ResponseController::class, 'store'])->name('responses.store');
 
 Route::middleware('auth')->prefix('profile')->name('profile.')->group(function () {
@@ -42,4 +42,9 @@ Route::middleware('auth')->prefix('profile')->name('profile.')->group(function (
     Route::patch('/', [ProfileController::class, 'update'])->name('update');
     Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
     Route::post('/posts/{post}/close', [ProfileController::class, 'closePost'])->name('close-post');
+});
+
+
+Route::get('/teste', function () {
+    return view('teste');
 });

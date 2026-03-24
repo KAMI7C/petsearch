@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'PetSearch') — найти друга</title>
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <title><?php echo $__env->yieldContent('title', 'PetSearch'); ?> — найти друга</title>
     
    
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="<?php echo e(asset('css/style.css')); ?>">
   
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
   
@@ -16,49 +16,51 @@
 <body>
     <header class="header">
         <div class="container header__inner">
-            <a href="{{ route('home') }}" class="logo">
+            <a href="<?php echo e(route('home')); ?>" class="logo">
                 <i class="fas fa-paw logo__icon"></i>
                 <span class="logo__text">PetSearch</span>
             </a>
             
             <nav class="nav">
                 <ul class="nav__list">
-                    <li class="nav__item"><a href="{{ route('posts.index') }}" class="nav__link">Объявления</a></li>
-                    <li class="nav__item"><a href="{{ route('about') }}" class="nav__link">О проекте</a></li>
+                    <li class="nav__item"><a href="<?php echo e(route('posts.index')); ?>" class="nav__link">Объявления</a></li>
+                    <li class="nav__item"><a href="<?php echo e(route('about')); ?>" class="nav__link">О проекте</a></li>
                     
-                    @auth
-                        <li class="nav__item"><a href="{{ route('posts.create') }}" class="nav__link nav__link--accent">+ Добавить</a></li>
+                    <?php if(auth()->guard()->check()): ?>
+                        <li class="nav__item"><a href="<?php echo e(route('posts.create')); ?>" class="nav__link nav__link--accent">+ Добавить</a></li>
                         <li class="nav__item nav__item--dropdown">
                             <span class="nav__link nav__link--user">
-                                <i class="far fa-user-circle"></i> {{ Auth::user()->name }}
+                                <i class="far fa-user-circle"></i> <?php echo e(Auth::user()->name); ?>
+
                             </span>
                             <ul class="dropdown">
-                                <li><a href="{{ route('profile.show') }}" class="dropdown__link">Личный кабинет</a></li>
+                                <li><a href="<?php echo e(route('profile.show')); ?>" class="dropdown__link">Личный кабинет</a></li>
                                 <li>
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
+                                    <form method="POST" action="<?php echo e(route('logout')); ?>">
+                                        <?php echo csrf_field(); ?>
                                         <button type="submit" class="dropdown__link dropdown__link--logout">Выйти</button>
                                     </form>
                                 </li>
                             </ul>
                         </li>
-                    @else
-                        <li class="nav__item"><a href="{{ route('login') }}" class="nav__link">Вход</a></li>
-                        <li class="nav__item"><a href="{{ route('register') }}" class="nav__link nav__link--accent">Регистрация</a></li>
-                    @endauth
+                    <?php else: ?>
+                        <li class="nav__item"><a href="<?php echo e(route('login')); ?>" class="nav__link">Вход</a></li>
+                        <li class="nav__item"><a href="<?php echo e(route('register')); ?>" class="nav__link nav__link--accent">Регистрация</a></li>
+                    <?php endif; ?>
                 </ul>
             </nav>
         </div>
     </header>
 
-    @if(session('success'))
+    <?php if(session('success')): ?>
         <div class="alert alert--success container">
-            <i class="fas fa-check-circle"></i> {{ session('success') }}
+            <i class="fas fa-check-circle"></i> <?php echo e(session('success')); ?>
+
         </div>
-    @endif
+    <?php endif; ?>
 
     <main class="main">
-        @yield('content')
+        <?php echo $__env->yieldContent('content'); ?>
     </main>
 
     <footer class="footer">
@@ -70,8 +72,8 @@
             <div class="footer__col">
                 <h4 class="footer__title">Навигация</h4>
                 <ul class="footer__list">
-                    <li><a href="{{ route('posts.index') }}">Все объявления</a></li>
-                    <li><a href="{{ route('about') }}">О проекте</a></li>
+                    <li><a href="<?php echo e(route('posts.index')); ?>">Все объявления</a></li>
+                    <li><a href="<?php echo e(route('about')); ?>">О проекте</a></li>
                     <li><a href="#">Правила</a></li>
                 </ul>
             </div>
@@ -82,8 +84,8 @@
             </div>
         </div>
         <div class="footer__bottom">
-            <p>© {{ date('Y') }} PetSearch. Сделано с заботой.</p>
+            <p>© <?php echo e(date('Y')); ?> PetSearch. Сделано с заботой.</p>
         </div>
     </footer>
 </body>
-</html>
+</html><?php /**PATH C:\OSPanel\home\petsearch_new\resources\views/layouts/app.blade.php ENDPATH**/ ?>

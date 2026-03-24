@@ -145,7 +145,7 @@
                                             <a href="{{ route('posts.show', $post) }}" class="btn btn--outline btn--small">
                                                 Просмотр
                                             </a>
-                                            <button class="btn btn--danger btn--small" onclick="removeFromFavorites({{ $post->id }})">
+                                            <button class="btn btn--danger btn--small" onclick="removeFromFavorites({{ $post->id }}, this)">
                                                 <i class="fas fa-heart-broken"></i> Удалить
                                             </button>
                                         </div>
@@ -167,18 +167,36 @@
 </div>
 
 <script>
-function removeFromFavorites(postId) {
+function removeFromFavorites(postId, element) {
     if (!confirm('Удалить из избранного?')) return;
 
     fetch(`/posts/${postId}/favorite`, {
         method: 'POST',
         headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
         }
     })
     .then(response => response.json())
     .then(data => {
-        location.reload();
+        if (data.success) {
+            // Удаляем карточку из DOM с плавной анимацией
+            const card = element.closest('.post-card');
+            card.style.opacity = '0';
+            card.style.transition = 'opacity 0.3s ease';
+            setTimeout(() => {
+                card.remove();
+                
+                // Проверяем, есть ли еще карточки
+                const postsGrid = document.querySelector('.posts-grid');
+                if (postsGrid && postsGrid.children.length === 0) {
+                    location.reload();
+                }
+            }, 300);
+        } else {
+            alert(data.message || 'Ошибка при удалении');
+        }
     })
     .catch(error => {
         console.error('Error:', error);

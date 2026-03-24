@@ -38,7 +38,7 @@ class ResponseController extends Controller
 
         $post = Post::findOrFail($request->post_id);
 
-        // Проверяем, что пользователь не отвечает на своё собственное объявление
+        
         if (Auth::check() && $post->user_id === Auth::id()) {
             return response()->json([
                 'success' => false,
